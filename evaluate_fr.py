@@ -199,10 +199,10 @@ def evaluate(sents, morph, subcat=None):
 
         # process both base and variant sentences
         tags = [t[2] for w in words for t in d_morph[w] if t[0].startswith('n')]
-        # find the last new noun in the sentence, the pronoun should be after.
+        # find the leftmost new noun in the sentence, the pronoun should be after.
         index_nouns = [i for i, w in enumerate(sents[1]) for t in d_morph[w] if w in words and t[0].startswith('n')]
         if len(tags) > 0:
-            tags_pron = [t[2] for i, w in enumerate(sents[1]) for t in d_morph[w] if (t[0] == 'pro' or t[0].startswith('cl')) if i > max(index_nouns)]
+            tags_pron = [t[2] for i, w in enumerate(sents[1]) for t in d_morph[w] if (t[0] == 'pro' or t[0].startswith('cl')) if i > min(index_nouns)]
             if len(tags_pron) > 0:
                 total += 1
                 if subcat == 'gender':
@@ -216,10 +216,10 @@ def evaluate(sents, morph, subcat=None):
             return 0, 0
         words_base = [sents[0][i] for i in index_base]
         tags = [t[2] for w in words_base for t in d_morph[w] if t[0].startswith('n')]
-        # find the last new noun in the sentence, the pronoun should be after.
+        # find the leftmost new noun in the sentence, the pronoun should be after.
         index_nouns = [i for i, w in enumerate(sents[0]) for t in d_morph[w] if w in words_base and t[0].startswith('n')]
         if len(tags) > 0:
-            tags_pron = [t[2] for i, w in enumerate(sents[0]) for t in d_morph[w] if (t[0] == 'pro' or t[0].startswith('cl')) if i > max(index_nouns)]
+            tags_pron = [t[2] for i, w in enumerate(sents[0]) for t in d_morph[w] if (t[0] == 'pro' or t[0].startswith('cl')) if i > min(index_nouns)]
             if len(tags_pron) > 0:
                 total += 1
                 if subcat == 'gender':
