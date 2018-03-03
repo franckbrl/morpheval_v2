@@ -7,7 +7,6 @@ Morpheval evaluation script for French
 
 import argparse
 import pickle
-import operator
 import math
 
 from collections import defaultdict, Counter
@@ -244,7 +243,7 @@ def get_entropy(index, feature_list):
             else:
                 counter[val] += 1
     # sort the values by frequency
-    sorted_number = sorted(counter.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_number = sorted(counter.items(), key=lambda x: (x[1],x[0]), reverse=True)
     #print(sorted_number)
     final_values = []
     for idx in index:
