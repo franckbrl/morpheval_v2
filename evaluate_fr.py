@@ -417,7 +417,7 @@ for sents, morph in get_pairs(args.i, args.n):
                 total[inf] += 1
 
     elif morph == 'coref':
-        for subcat in ['number']:
+        for subcat in ['gender']:
             inf = morph+'-'+subcat
             res, tot = evaluate(sents, morph, subcat)
             results[inf] += res
