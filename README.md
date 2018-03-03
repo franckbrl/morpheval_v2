@@ -12,7 +12,7 @@ types of information:
 ## Requirements
 
 * Python 3
-* Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents).
+* Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.info).
 * Download the [French dictionary](https://morpheval.limsi.fr/lefff.pkl) (taken from the [Lefff](http://alpage.inria.fr/~sagot/lefff.html))
 
 ## How To
