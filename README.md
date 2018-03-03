@@ -19,7 +19,7 @@ is then analyzed and provides three types of information:
 ## How To
 
 Translate the source file `morpheval.limsi.v2.en.sents` and run the
-[Moses tokenizer](https://github.com/moses-smt/mosesdecoder/blob/master/scripts/tokenizer) on it (with `-no-escape` and `-l {fr|cs}`). Then:
+[Moses tokenizer](https://github.com/moses-smt/mosesdecoder/blob/master/scripts/tokenizer) on it (with arguments `-no-escape` and `-l {fr|cs}`). Then:
 
 ### French
 
