@@ -11,8 +11,8 @@ is then analyzed and provides three types of information:
 
 ## Requirements
 
-* Python 3
-* Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.info).
+* Python3
+* Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.info)
 * (French) Download the [dictionary](https://morpheval.limsi.fr/lefff.pkl) (taken from the [Lefff](http://alpage.inria.fr/~sagot/lefff.html))
 * (Czech) Download and install [Morphodita](https://github.com/ufal/morphodita/releases/tag/v1.3.0) version 1.3, as well as the [dictionary](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D8-1)
 
@@ -27,7 +27,7 @@ Translate the source file `morpheval.limsi.v2.en.sents` and run the
 
 ### Czech
 
-`cat output.tokenized | tr ' ' '\n' | morphodita/src/run_morpho_analyze dictionary --input=vertical --output=vertical > output.analysis`
+`cat output.tokenized | tr ' ' '\n' | morphodita/src/run_morpho_analyze dictionary --input=vertical --output=vertical > output.analysis` <br>
 `python3 evaluate_cs.py -i output.analysis -n morpheval.limsi.v2.en.info`
 
 ## Publication
