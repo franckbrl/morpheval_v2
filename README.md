@@ -27,7 +27,7 @@ Translate the source file `morpheval.limsi.v2.en.sents` and run the
 
 ### Czech
 
-`cat output.tokenized | tr ' ' '\n' | morphodita/src/run_morpho_analyze dictionary --input=vertical --output=vertical > output.analysis` <br>
+`cat output.tokenized | sed 's/$/\n/' | tr ' ' '\n' | morphodita/src/run_morpho_analyze dictionary --input=vertical --output=vertical > output.analysis` <br>
 `python3 evaluate_cs.py -i output.analysis -n morpheval.limsi.v2.en.info`
 
 ## Publication
