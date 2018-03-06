@@ -430,8 +430,13 @@ for sents, morph in get_pairs(args.i, args.n):
 
 # Display results of evaluation
 print("\n==== A/B-sets ====\n")
+filler = 20
 for res, nb in sorted(results.items()):
-    print("{}:\t{:.1f}% ({}/{})".format(res, nb/total[res]*100, nb, total[res]))
+    res_display = res + ': '
+    while len(res_display) < filler:
+        res_display = ' ' + res_display
+    
+    print("{}{:.1f}% ({}/{})".format(res_display, nb/total[res]*100, nb, total[res]))
 
 print("\n==== C-set ====\n")
 print("== adjectives ==")
