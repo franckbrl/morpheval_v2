@@ -20,8 +20,15 @@ def get_pairs(text, info):
     sent = []
     i = 0
     for line in text:
+        # tokenization fix
+        new_sent = []
+        for word in line.split():
+            if '-' in word and word.split('-')[-1] in ['le', 'la', 'les', 'ils', 'les']:
+                new_sent += word.split('-')
+            else:
+                new_sent.append(word)
         # lower all words (all dictionary entries are lowered)
-        sents.append([w.lower() for w in line.split()])
+        sents.append([w.lower() for w in new_sent])
         i += 1
         # new sentence group
         try:
@@ -158,17 +165,18 @@ def evaluate(sents, morph, subcat=None):
             tags = [t[2] for w in words for t in d_morph[w] if t[0].startswith('n')]
             feat = [t for t in tags if 'p' in t]
         if morph == 'negation':
-            feat = [w for w in words if w in ['ne', "n'"] or w.startswith('aucun')]
+            feat = [w for w in words if w in ['ne', "n'", "non"] or w.startswith('aucun')]
         if morph == 'pron_plur':
-            feat = [w for w in words if w in ['ils', 'les', 'leurs', 'eux']]
+            feat = [w for w in words if w in ['ils', 'les', 'leur', 'eux', 'en']]
         if morph == 'comparative':
             feat = [w for w in words if w in ['plus', 'moins', 'pire', 'davantage', 'mieux'] or w.startswith('ultérieur') or w.startswith('meilleur') or w.startswith('antérieur') or w.startswith('inférieur') or w.startswith('supérieur') or w.startswith('moindre')]
         if morph == 'superlative':
             feat = []
             art = []
-            if ('le' in words or 'la' in words or 'les' in words) and 'plus':
+            if ('le' in sents[1] or 'la' in sents[1] or 'les' in sents[1]) and 'plus' in words:
                 art = ['ok']
-            art = [w for w in words if w in ['le', 'la', 'les']]
+            else:
+                art = [w for w in words if w in ['le', 'la', 'les']]
             sup = [w for w in words if w.startswith('meilleur') or w.startswith('pire') or w == 'plus']
             if art != [] and sup != []:
                 feat = ['ok']
@@ -357,7 +365,10 @@ parser.add_argument('-i', dest='i', nargs="?", type=argparse.FileType('r'),
 parser.add_argument('-n', dest='n', nargs="?", type=argparse.FileType('r'),
                     help="input info file")
 parser.add_argument('-d', dest='d', nargs="?", type=str,
-                    help="French dictionary", default='lefff.pkl')
+                    help="french dictionary", default='lefff.pkl')
+parser.add_argument('-output-fails', dest='fails', nargs="?", type=str,
+                    help="output name file to store sentence pairs that have failed in any A and B sets", default=None)
+
 args = parser.parse_args()
 
 correct = 0
@@ -366,6 +377,10 @@ total = 0
 d_morph = defaultdict(lambda: [])
 for k, v in pickle.load(open(args.d, 'rb')).items():
     d_morph[k] = v
+
+fail_file = None
+if args.fails:
+    fail_file = open(args.fails, 'w')
 
 results = defaultdict(lambda: 0)
 total = defaultdict(lambda: 0)
@@ -428,6 +443,11 @@ for sents, morph in get_pairs(args.i, args.n):
             results[morph] += res
             total[morph] += 1
 
+    if fail_file and not morph.startswith('syns') and res == 0:
+        fail_file.write('=== ' + morph + ' ===\n')
+        fail_file.write(' '.join(sents[0]) + '\n')
+        fail_file.write(' '.join(sents[1]) + '\n')
+        
 # Display results of evaluation
 print("\n==== A/B-sets ====\n")
 filler = 20
