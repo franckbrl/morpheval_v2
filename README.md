@@ -15,6 +15,7 @@ is then analyzed and provides three types of information:
 * Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.info)
 * (French) Download the [dictionary](https://morpheval.limsi.fr/lefff.pkl) (taken from the [Lefff](http://alpage.inria.fr/~sagot/lefff.html))
 * (Czech) Download and install [Morphodita](https://github.com/ufal/morphodita/releases/tag/v1.3.0) version 1.3, as well as the [dictionary](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D8-1)
+* (German) Download and install [Smor](http://www.cis.uni-muenchen.de/~schmid/tools/SMOR/)
 
 ## How To
 
@@ -29,6 +30,11 @@ Translate the source file `morpheval.limsi.v2.en.sents` and run the
 
 `cat output.tokenized | sed 's/$/\n/' | tr ' ' '\n' | morphodita/src/run_morpho_analyze dictionary --input=vertical --output=vertical > output.analysis` <br>
 `python3 evaluate_cs.py -i output.analysis -n morpheval.limsi.v2.en.info`
+
+### German
+
+`cat output.tokenized | tr ' ' '\n' | sort | uniq | ./smor > output.smored` <br>
+`python3 evaluate_de.py -i output.tokenized -n morpheval.limsi.v2.en.info -d output.smored`
 
 ## Publication
 
