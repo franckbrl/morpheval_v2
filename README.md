@@ -24,7 +24,7 @@ Translate the source file `morpheval.limsi.v2.en.sents` and run the
 
 ### French
 
-`python3 evaluate_fr.py -i output.tokenized -n morpheval.limsi.v2.en.info -d /path/to/lefff.pkl`
+`python3 evaluate_fr.py -i output.tokenized -n morpheval.limsi.v2.en.info -d lefff.pkl`
 
 ### Czech
 
