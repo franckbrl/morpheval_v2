@@ -160,6 +160,13 @@ def evaluate(sents, morph, subcat=None):
             feat = [t for t in tags if 'C' in t]
         if morph == 'subjunctive':
             tags = [t[2] for w in words for t in d_morph[w] if t[0] == 'v']
+            if tags == []:
+                # indicative and subjunctive can be similar:
+                # je crois qu'il mange (indicative)
+                # je ne crois pas qu'il mange (subjunctive)
+                index = [i for i, _ in enumerate(sents[1])]
+                words = sents[1]
+                tags = [t[2] for w in words for t in d_morph[w] if t[0] == 'v']
             feat = [t for t in tags if 'S' in t or 'T' in t]
         if morph == 'noun_number':
             tags = [t[2] for w in words for t in d_morph[w] if t[0].startswith('n')]
