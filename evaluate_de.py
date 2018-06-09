@@ -48,7 +48,7 @@ def read_smor(smored):
                 compounds = []
                 morph = []
             try:
-                word = line.split()[1]
+                word = line.split()[1].lower()
             except IndexError:
                 word = None
         else:
