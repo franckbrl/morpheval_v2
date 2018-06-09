@@ -43,8 +43,18 @@ def read_smor(smored):
     for line in smored:
         if line.startswith('analyze>'):
             if word:
-                d_compounds[word] = compounds
-                d_morph[word] = morph
+                if word in d_compounds:
+                    for analysis in compounds:
+                        if not analysis in d_compounds[word]:
+                            d_compounds[word].append(analysis)
+                else:
+                    d_compounds[word] = compounds
+                if word in d_morph:
+                    for analysis in morph:
+                        if not analysis in d_morph[word]:
+                            d_morph[word].append(analysis)
+                else:
+                    d_morph[word] = morph
                 compounds = []
                 morph = []
             try:
@@ -69,9 +79,9 @@ def read_smor(smored):
                 comp = line.split()
                 if comp not in compounds:
                     compounds.append(comp)
-
-    d_compounds[word] = compounds
-    d_morph[word] = morph
+    if word:
+        d_compounds[word] = compounds
+        d_morph[word] = morph
 
     return d_morph, d_compounds
 
