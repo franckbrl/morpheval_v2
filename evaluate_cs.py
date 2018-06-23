@@ -266,6 +266,10 @@ def evaluate(sents, tags, morph, subcat=None):
 
     if morph == 'coref':
         def _check_coref(tags, tags_pron):
+            if ('N' in tags or 'F' in tags) and 'H' in tags_pron:
+                return 1
+            if 'Z' in tags_pron and ('M' in tags or 'I' in tags or 'N' in tags):
+                return 1
             inter = list(set(tags).intersection(tags_pron))
             if inter != [] or 'X' in tags or 'X' in tags_pron:
                 return 1
