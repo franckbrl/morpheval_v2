@@ -597,7 +597,7 @@ if args.latex:
     ]
     meanA = sum([results[m]/total[m]*100 for m in a_feat])/len(a_feat)
     latexA = [results[m]/total[m]*100 for m in a_feat] + [meanA]
-    print("A-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexA))
+    #print("A-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexA))
 
     b_feat = ['coordverb-number',
     'coordverb-person',
@@ -612,12 +612,12 @@ if args.latex:
     ]
     meanB = sum([results[m]/total[m]*100 for m in b_feat])/len(b_feat)
     latexB = [results[m]/total[m]*100 for m in b_feat] + [meanB]
-    print("B-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexB))
+    print("B-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexB))
 
     mean=sum([ent_n/total_n, ent_adj_gend/total_adj, ent_adj_numb/total_adj, ent_v_nb/total_v, ent_v_ps/total_v, ent_v_tm/total_v]) / 6.
     latex=[ent_n/total_n, ent_adj_gend/total_adj, ent_adj_numb/total_adj, ent_v_nb/total_v, ent_v_ps/total_v, ent_v_tm/total_v, mean]
 
-    print("C-set: {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} \\\\ ".format(*latex))
+    #print("C-set: {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} \\\\ ".format(*latex))
 
 else:
     print("\n==== A/B-sets ====\n")
