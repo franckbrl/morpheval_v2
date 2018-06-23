@@ -28,7 +28,7 @@ def get_pairs(text, info):
         line = line.split()
         # new sentence group
         if sent_id != info[i][0]:
-            yield sents, tags, info[i-1][1]
+            yield sents, tags, info[i-1][1], info[i-1][0]
             sents = []
             tags = []
             sent_id = info[i][0]
@@ -41,7 +41,7 @@ def get_pairs(text, info):
             ii += 2
         tag.append(t)
     # last sentence
-    yield sents, tags, info[-1][1]
+    yield sents, tags, info[-1][1], info[i-1][0]
 
 
 def get_new_words_idx(base, variant):
@@ -470,6 +470,8 @@ parser.add_argument('-i', dest='i', nargs="?", type=argparse.FileType('r'),
                     help="input morphodita analysis")
 parser.add_argument('-n', dest='n', nargs="?", type=argparse.FileType('r'),
                     help="input info file")
+parser.add_argument('-l', '--latex', dest='latex', action='store_true',
+                    help="output in latex format")
 args = parser.parse_args()
 
 correct = 0
@@ -490,7 +492,14 @@ total_v = 0
 results = defaultdict(lambda: 0)
 total = defaultdict(lambda: 0)
 
-for sents, tags, morph in get_pairs(args.i, args.n):
+for sents, tags, morph, sent_id in get_pairs(args.i, args.n):
+    if morph == 'future':
+        # Remove bad sentence pairs evaluating future and
+        # containing "until" (in morpheval_v2 test suite).
+        if sent_id in ['313']:
+            print("sentences removed:", morph, sent_id)
+            continue
+
     if len(sents) == len(tags) == 2 and not morph.startswith('syns'):
         subcat = None
         if ':' in morph:
@@ -551,25 +560,62 @@ for sents, tags, morph in get_pairs(args.i, args.n):
             total_v += 1
 
 # Display results of evaluation
-print("==== A/B-sets ====\n")
-filler = 22
-for res, nb in sorted(results.items()):
-    if res in ['adj_strong', 'compounds_syns', 'subjunctive', 'verb_position']:
-        continue
-    res_display = res + ': '
-    while len(res_display) < filler:
-        res_display = ' ' + res_display
-    print("{}{:.1f}% ({}/{})".format(res_display, nb/total[res]*100, nb, total[res]))
+if args.latex:
+    a_feat = ['past',
+    'future',
+    'conditional',
+    'negation',
+    'pron_fem',
+    'pron_plur',
+    'noun_number',
+    'comparative',
+    'superlative'
+    ]
+    meanA = sum([results[m]/total[m]*100 for m in a_feat])/len(a_feat)
+    latexA = [results[m]/total[m]*100 for m in a_feat] + [meanA]
+    print("A-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexA))
 
-print("\n==== C-set ====\n")
-print("* nouns")
-print("    case: {:.3f}".format(ent_n/total_n))
-print("\n* adjectives")
-print("  gender: {:.3f}".format(ent_adj_gend/total_adj))
-print("  number: {:.3f}".format(ent_adj_numb/total_adj))
-print("    case: {:.3f}".format(ent_adj_case/total_adj))
-print("\n* verbs")
-print("  number: {:.3f}".format(ent_v_nb/total_v))
-print("  person: {:.3f}".format(ent_v_ps/total_v))
-print("   tense: {:.3f}".format(ent_v_tm/total_v))
-print("negation: {:.3f}".format(ent_v_ne/total_v))
+    b_feat = ['coordverb-number',
+    'coordverb-person',
+    'coordverb-tense',
+    'pron2coord',
+    'pron2nouns-gender',
+    'pron2nouns-number',
+    'pron2nouns-case',
+    'pron_relative-gender',
+    'pron_relative-number',
+    'preposition',
+    'coref-gender'
+    ]
+    meanB = sum([results[m]/total[m]*100 for m in b_feat])/len(b_feat)
+    latexB = [results[m]/total[m]*100 for m in b_feat] + [meanB]
+    print("B-set: {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% & {:.1f}\% \\\\ ".format(*latexB))
+
+    mean=sum([ent_n/total_n, ent_adj_gend/total_adj, ent_adj_numb/total_adj, ent_adj_case/total_adj, ent_v_nb/total_v, ent_v_ps/total_v, ent_v_tm/total_v, ent_v_ne/total_v]) / 8.
+    latex=[ent_n/total_n, ent_adj_gend/total_adj, ent_adj_numb/total_adj, ent_adj_case/total_adj, ent_v_nb/total_v, ent_v_ps/total_v, ent_v_tm/total_v, ent_v_ne/total_v, mean]
+
+    print("C-set: {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} & {:.3f} \\\\ ".format(*latex))
+
+else:
+    print("==== A/B-sets ====\n")
+    filler = 22
+    for res, nb in sorted(results.items()):
+        if res in ['adj_strong', 'compounds_syns', 'subjunctive', 'verb_position']:
+            continue
+        res_display = res + ': '
+        while len(res_display) < filler:
+            res_display = ' ' + res_display
+        print("{}{:.1f}% ({}/{})".format(res_display, nb/total[res]*100, nb, total[res]))
+
+    print("\n==== C-set ====\n")
+    print("* nouns")
+    print("    case: {:.3f}".format(ent_n/total_n))
+    print("\n* adjectives")
+    print("  gender: {:.3f}".format(ent_adj_gend/total_adj))
+    print("  number: {:.3f}".format(ent_adj_numb/total_adj))
+    print("    case: {:.3f}".format(ent_adj_case/total_adj))
+    print("\n* verbs")
+    print("  number: {:.3f}".format(ent_v_nb/total_v))
+    print("  person: {:.3f}".format(ent_v_ps/total_v))
+    print("   tense: {:.3f}".format(ent_v_tm/total_v))
+    print("negation: {:.3f}".format(ent_v_ne/total_v))
