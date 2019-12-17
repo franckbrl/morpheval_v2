@@ -59,26 +59,27 @@ def read_smor(smored):
                 morph = []
             try:
                 word = line.split()[1].lower()
+                word = re.sub("<.*", "", word)
             except IndexError:
                 word = None
-        else:
-            if line.startswith('no result for'):
-                continue
-            if word:
-                # get tags
-                pattern = re.compile("<([^>]*)>")
-                match = pattern.findall(line)
-                # Main PoS start with '+' (only one per ta sequence)
-                idx = [i for i, t in enumerate(match) if t.startswith('+')][0]
-                tags = match[idx:]
-                morph.append(tags)
-                # get compound split
-                line = line.rstrip()
-                for tag in match:
-                    line = line.replace('<' + tag + '>', ' ')
-                comp = line.split()
-                if comp not in compounds:
-                    compounds.append(comp)
+        line = re.sub("^analyze> ", "", line)
+        if line.startswith('no result for'):
+            continue
+        if word and line.startswith(word+"<+"):
+            # get tags
+            pattern = re.compile("<([^>]*)>")
+            match = pattern.findall(line)
+            # Main PoS start with '+' (only one per ta sequence)
+            idx = [i for i, t in enumerate(match) if t.startswith('+')][0]
+            tags = match[idx:]
+            morph.append(tags)
+            # get compound split
+            line = line.rstrip()
+            for tag in match:
+                line = line.replace('<' + tag + '>', ' ')
+            comp = line.split()
+            if comp not in compounds:
+                compounds.append(comp)
     if word:
         d_compounds[word] = compounds
         d_morph[word] = morph
