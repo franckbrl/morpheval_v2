@@ -15,7 +15,7 @@ is then analyzed and provides three types of information:
 * Download the [test suite](https://morpheval.limsi.fr/morpheval.limsi.v2.en.sents) and [sentence tags](https://morpheval.limsi.fr/morpheval.limsi.v2.en.info)
 * (French) Download the [dictionary](https://morpheval.limsi.fr/lefff.pkl) (taken from the [Lefff](http://alpage.inria.fr/~sagot/lefff.html))
 * (Czech) Download and install [Morphodita](https://github.com/ufal/morphodita/releases/tag/v1.3.0) version 1.3, as well as the [dictionary](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D8-1)
-* (German) Download and install [Smor](http://www.cis.uni-muenchen.de/~schmid/tools/SMOR/)
+* (German) Download and install [Smor version `old2`](https://www.cis.uni-muenchen.de/~schmid/tools/SMOR/data/SMOR-linux-old2.tar.gz). With more recent versions, run `./smor-infl` instead of `./smor` below.
 
 ## How To
 
@@ -33,7 +33,7 @@ Translate the source file `morpheval.limsi.v2.en.sents` and run the
 
 ### German
 
-`cat output.tokenized | tr ' ' '\n' | sort | uniq | ./smor > output.smored` <br>
+`cat output.tokenized | tr ' ' '\n' | sort -u | ./smor > output.smored` <br>
 `python3 evaluate_de.py -i output.tokenized -n morpheval.limsi.v2.en.info -d output.smored`
 
 ## Publication
