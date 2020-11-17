@@ -2,7 +2,7 @@
 
 Evaluation of the morphological quality of machine translation outputs.
 The automatically generated test suite in English should be translated
-into one of the supported target languages (French, Czech). The output
+into one of the supported target languages (French, Czech, German). The output
 is then analyzed and provides three types of information:
 
 * Adequacy: has the morphological information been well conveyed from the source?
